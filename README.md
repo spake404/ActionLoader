@@ -1,49 +1,59 @@
-I got a warning I will be locked out omy github account, so, ill stop updating Actionloader here.
+# Action Loader for Blender 5.1
 
-# Action Loader
-ActionLoader.py
+Action Loader is a Blender add-on for browsing every Action in the current
+`.blend`, assigning an Action to the active object, and previewing animation
+sets without repeatedly opening the Action Editor menu.
 
-Action Loader is a Blender addon for quickly displaying and loading actions into a model. It was done particularly to manage multiple actions / animations on the same character, for game animations.
+This fork updates the add-on for Blender 5.1's layered Actions and Action
+Slots. It is based on
+[vaner-org/ActionLoader](https://github.com/vaner-org/ActionLoader), which in
+turn is a fork of the original
+[frederico4d/ActionLoader](https://github.com/frederico4d/ActionLoader).
 
-preview: https://www.youtube.com/watch?v=aQrfsufhyWw
+## Blender 5.1 changes
 
+- Supports layered Actions and reads F-Curves from the active Action Slot.
+- Preserves the matching Action Slot when switching Actions. This is important
+  when one Action contains slots for both a rig and a weapon.
+- Updates the object-location mute control for channel bags.
+- Adds Play/Pause and frame-jump controls to the Action Loader panel.
+- Adds optional Auto Play when selecting an Action.
+- Adds guards for missing objects, animation data, Actions, and invalid list
+  indices.
+- Cleans up all registered properties when the add-on is disabled.
 
-## What are actions?
+## Install
 
-If you are not aware of how actions work, or are not used to blender. Actions are the way blender stores animations for objects, and for armatures(Rigs). This means each action will have a complete animation for an entire rig, including all the complex constraints and key frames you can throw at it. So, with this addon, you are able to switch between entire actions with one click.
-Actions also work interchangeably between objects (or entire rigs) this means you can have different characters, with different rigs and totally different proportions, and still use the same animations in both, as long as you use the same name for the bones (you can also have specific bones for each characters that those speficil animations will also be stored).
+1. Download `ActionLoader.py`.
+2. In Blender 5.1, open `Edit > Preferences > Add-ons`.
+3. Choose `Install from Disk` and select `ActionLoader.py`.
+4. Enable `Animation: Action Loader`.
+5. Open the 3D View sidebar with `N`, then select the `Animation` tab.
 
+Select an object or armature and click an Action in the list to assign it.
+Use the search field in the list to filter names such as `ryu_idle`.
 
-## How to use Action Loader?
+## Preview controls
 
-To install, in Blender go to Edit > Preferences > Add-ons > Install and pick the ActionLoader.py directly. Then activate it on the addons list, you might have to use the search to find it.
+- `Play/Pause`: preview the current Action.
+- `Auto Play`: start playback whenever an Action is selected.
+- `Set Auto Range`: update the scene range for the selected Action.
+- `Jump to first Frame`: return to the Action's first frame after switching.
+- `Custom/Keyframes`: choose stored custom ranges or the Action's keyframe
+  range.
 
-![ActionLoader](ActionLoader_tips.png)
+## Compatibility test
 
-I have automated most things, so you just have to select an object, usually an armature, and select the actions from the list.
+Run the test with Blender 5.1:
 
-And with that one click you get:
-- It will automatically save the current frame range on the current action;
-- Apply the newly selected action;
-- Set the frame range on the scene from the selected action; (optionally: set frame range from first and last keyframe.)
-- Zoom in on all time viewers (Timeline Dopesheet Editor and Graph Editor). 
+```powershell
+blender.exe --factory-startup --background --python tests/blender_compat_test.py
+```
 
-And:
-- You can switch from animation while playing the animations in loop for a really quick preview of all your work.
+The test creates a layered Action with separate rig and tool slots, switches
+Actions, verifies slot preservation and frame range updates, and checks that
+location muting only affects the active slot.
 
-- It also ads fake users to the actions automatically so you don't have to think about it nor worry about loosing actions.
+## License
 
-- There is a filter in the list, so that if you have hundreds of animations, just carefully name them, and use that filter to display only a set of animations, for example, fighting animations can have a tag in the name, and you filter for it etc...
-
-- It also displays some information about the actions, that can be helpfull, currently: the name, number of frames (from the frame range) and duration in seconds, number of users, and if it has a fake user (for your mental sanity check!). 
-
-- Other info: shows the total number of animations in the file and number of listed (filtered) animations.
-
-Any comments, ideas etc... are welcome, please issue them!
-
-### Links:
-
-[Thread on Blenderartists.org](https://blenderartists.org/forum/showthread.php?420530-AddOn-Action-Loader)
-
-
-
+GPL-3.0, inherited from the upstream project.
