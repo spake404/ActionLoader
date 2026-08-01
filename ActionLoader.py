@@ -1,10 +1,10 @@
 bl_info = {
-	"name": "Action Loader",
+	"name": "Action Loader 中文版",
 	"author": "Frederico Martins, vaner-org, spake404",
-	"version": (5, 1, 0),
+	"version": (5, 1, 1),
 	"blender": (5, 1, 0),
-	"location": "View3D > Tools > Animation",
-	"description": "Lists all Actions and assigns it to active object",
+	"location": "3D 视图 > 侧栏 > 动画",
+	"description": "列出全部动作，并将选中的动作绑定到活动物体",
 	"warning": "",
 	"wiki_url": "https://github.com/spake404/ActionLoader",
 	"tracker_url": "https://github.com/spake404/ActionLoader/issues",
@@ -370,8 +370,8 @@ class ACTION_UL_list(bpy.types.UIList):
 
 
 class ActionLoaderPanel(bpy.types.Panel):
-	"""Creates a Panel in the Animation tab of the 3D View's Tools"""
-	bl_label = "Action Loader 5.1"
+	"""在 3D 视图的动画侧栏中显示动作加载器"""
+	bl_label = "动作加载器 5.1"
 	bl_idname = "OBJECT_PT_action_loader"
 	bl_space_type = "VIEW_3D"
 	bl_region_type = "UI"
@@ -411,11 +411,11 @@ class ActionLoaderPanel(bpy.types.Panel):
 			if  ob.animation_data == None or ob.animation_data.action == None:
 				info2 = "--f. | -s."
 				if ob.animation_data == None:
-					layout.label (text = "NO 'animation_data'")
+					layout.label (text = "没有动画数据")
 				elif ob.animation_data.action == None:
-					layout.label (text = "NO 'action'")
+					layout.label (text = "没有绑定动作")
 
-				layout.label(text = "Tip: Insert Keyframe" , icon = "INFO")     
+				layout.label(text = "提示：请先插入关键帧" , icon = "INFO")
 			elif ob.animation_data.action:
 				if ob.action_list_index > (len(bpy.data.actions)-1):
 					action_icon = "ERROR" 
@@ -454,7 +454,7 @@ class ActionLoaderPanel(bpy.types.Panel):
 				
 				# Draw Info!            
 				row = layout.row(align=True)
-				row.label(text =  str(AA.users)+" Users "+fakeuser + " | " + str(len(AA.pose_markers))+" Markers", icon = "INFO")   
+				row.label(text =  str(AA.users)+" 个使用者 "+fakeuser + " | " + str(len(AA.pose_markers))+" 个标记", icon = "INFO")
 				row.operator("renderprev.action", icon = "RENDER_ANIMATION")
 				
 			if context.scene.actionloader_rangemode == '1':
@@ -526,9 +526,9 @@ class ActionLoaderPanel(bpy.types.Panel):
 		row = layout.row(align=True)
 		
 		if filter_name == "":
-			row.label(text = str(total_anims) +" anims total", icon = "INFO")        
+			row.label(text = "共 " + str(total_anims) +" 个动作", icon = "INFO")
 		else:
-			row.label(text = str(listed_anims)+ " of " +str(total_anims) +" anims", icon = "INFO")
+			row.label(text = "显示 " + str(listed_anims)+ " / " +str(total_anims) +" 个动作", icon = "INFO")
 		
 		## DualView!!!!!!!!!!!!!!!!!!!!2
 		if bpy.context.scene.actionloader_DualView:
@@ -542,9 +542,9 @@ class ActionLoaderPanel(bpy.types.Panel):
 			listed_anims =len(filtered_actions)
 		
 			if filter_name2 == "":
-				row.label(text = str(total_anims) +" anims total", icon = "INFO")        
+				row.label(text = "共 " + str(total_anims) +" 个动作", icon = "INFO")
 			else:
-				row.label(text = str(listed_anims)+ " of " +str(total_anims) +" anims", icon = "INFO")      
+				row.label(text = "显示 " + str(listed_anims)+ " / " +str(total_anims) +" 个动作", icon = "INFO")
 		
 		# DUAL VIEW ICON BT
 		if scn.actionloader_DualView:
@@ -570,34 +570,34 @@ class ActionLoaderPanel(bpy.types.Panel):
 		)
 		jump_end = playback_row.operator("screen.frame_jump", text="", icon="FF")
 		jump_end.end = True
-		playback_row.prop(scn, "actionloader_autoplay", text="Auto Play", toggle=True)
+		playback_row.prop(scn, "actionloader_autoplay", text="自动播放", toggle=True)
 
-		layout.label(text = "Prev Speed:")
+		layout.label(text = "预览速度：")
 		
 		layout.prop(context.scene, 'actionloader_speedprev', expand=True)
 			 
-		layout.label(text = "Set Frame Range:")
+		layout.label(text = "帧范围设置：")
 		row = layout.row(align=True)
 		row.prop(context.scene, 'actionloader_rangemode', expand=True )
 		row.label(icon = rangemode_icon)
 		layout.operator("setcustombyrange.action", icon = "FILE_REFRESH")
 		
 		#layout.operator("ttt.action", text ="TTTTTT###TTTTTTTT").nome = "conho"
-		layout.label (text = "Other Tools: ")
+		layout.label (text = "其他工具：")
 		layout.operator("delete.action", icon = "ERROR")
 		#.delaction = bpy.data.actions[ob.action_list_index].name
 
-		layout.label(text= "Options:")
-		
-		layout.prop(scn, "actionloader_showicons", text="Show Icons")
-		layout.prop(scn, "actionloader_autorange", text="Set Auto Range")
-		layout.prop(scn, "actionloader_1stFrame", text="Jump to first Frame")
+		layout.label(text= "选项：")
+
+		layout.prop(scn, "actionloader_showicons", text="显示图标")
+		layout.prop(scn, "actionloader_autorange", text="自动设置帧范围")
+		layout.prop(scn, "actionloader_1stFrame", text="跳到第一帧")
 
 
 class OBJECT_OT_SetActionRange(bpy.types.Operator):
-	"""Sets current timeline range to action"""
+	"""将当前时间轴范围保存到动作"""
 	bl_idname = "set.actionrange"
-	bl_label = "Set Action range by timeline"
+	bl_label = "按时间轴设置动作范围"
 	def execute(self, context):
 		scn = context.scene
 		ActiveAction = context.active_object.animation_data.action
@@ -614,7 +614,7 @@ class OBJECT_OT_SetActionRange(bpy.types.Operator):
 
 
 class OBJECT_OT_DeselectObject(bpy.types.Operator):
-	"""Makes Object not active, but you can keep editing the action list"""
+	"""取消活动物体，同时保留动作列表的编辑状态"""
 	bl_idname = "object.deselect"
 	bl_label = ""
 
@@ -631,7 +631,7 @@ class OBJECT_OT_DeselectObject(bpy.types.Operator):
 
 
 class OBJECT_OT_DuplicateAction(bpy.types.Operator):
-	"""Duplicate Action"""
+	"""复制当前动作"""
 	bl_idname = "duplicate.action"
 	bl_label = ""
 	
@@ -649,7 +649,7 @@ class OBJECT_OT_DuplicateAction(bpy.types.Operator):
 
 
 class OBJECT_OT_UnlinkAction(bpy.types.Operator):
-	"""Unlinks Action from Active Object"""
+	"""解除当前动作与活动物体的绑定"""
 	bl_idname = "unlinks.action"
 	bl_label = ""
 	
@@ -662,9 +662,9 @@ class OBJECT_OT_UnlinkAction(bpy.types.Operator):
 
 
 class OBJECT_OT_fixsync(bpy.types.Operator):
-	"""Quick fix for unmaching action in Action Loader list"""
+	"""修复动作列表与活动物体当前动作不一致的问题"""
 	bl_idname = "fix.action"
-	bl_label = "fix"
+	bl_label = "同步当前动作"
 	
 	def execute(self, context):
 		quickfix_index()
@@ -672,7 +672,7 @@ class OBJECT_OT_fixsync(bpy.types.Operator):
 
 
 class OBJECT_OT_speedup(bpy.types.Operator):
-	"""Toggles between, 1/2x - 1/4x - 1/8x and Normal speeds for preview only - uses the 'Time Remapping' values"""
+	"""切换正常、1/2、1/4 和 1/8 预览速度（使用时间重映射）"""
 	bl_idname = "speeddown.action"
 	bl_label = ""
 	
@@ -724,9 +724,9 @@ class OBJECT_OT_speedup(bpy.types.Operator):
 
 
 class OBJECT_OT_customByRange(bpy.types.Operator):
-	"""Sets the custom range by the action's frame_range (first and last keyframes)"""
+	"""根据动作首尾关键帧设置自定义帧范围"""
 	bl_idname = "setcustombyrange.action"
-	bl_label = "Set Frame Range"
+	bl_label = "按关键帧重设范围"
 	
 	def execute(self, context):
 		ob = context.active_object
@@ -741,12 +741,12 @@ class OBJECT_OT_customByRange(bpy.types.Operator):
 
 
 class OBJECT_OT_renderprev(bpy.types.Operator):
-	"""Render Preview with Action Name (set output path to end in "/", without filename)"""
+	"""用动作名称渲染预览（输出路径应以“/”结尾且不含文件名）"""
 	bl_idname = "renderprev.action"
 	bl_label = ""
 
-	directory: bpy.props.StringProperty(name="Export directory", subtype="DIR_PATH")
-	filepath: bpy.props.StringProperty(name="Export filepath", subtype="FILE_PATH")
+	directory: bpy.props.StringProperty(name="导出目录", subtype="DIR_PATH")
+	filepath: bpy.props.StringProperty(name="导出路径", subtype="FILE_PATH")
 	filename: bpy.props.StringProperty()
 
 	def execute(self, context):
@@ -773,7 +773,7 @@ class OBJECT_OT_renderprev(bpy.types.Operator):
 
 
 class OBJECT_OT_muter(bpy.types.Operator):
-	"""Mutes Location"""
+	"""启用或禁用物体位移曲线"""
 	bl_idname = "muteloc.action"
 	bl_label = ""
 	def execute(self, context):
@@ -783,7 +783,7 @@ class OBJECT_OT_muter(bpy.types.Operator):
 
 		curves = location_fcurves(ob.animation_data.action, ob)
 		if not curves:
-			self.report({'WARNING'}, "The active Action Slot has no object location curves")
+			self.report({'WARNING'}, "当前动作槽中没有物体位移曲线")
 			return {'CANCELLED'}
 
 		mute_to = not all(curve.mute for curve in curves)
@@ -795,9 +795,9 @@ class OBJECT_OT_muter(bpy.types.Operator):
 
 	
 class OBJECT_OT_DeleteAction(bpy.types.Operator):
-	""" WARNING: Deletes Action from Blender File"""
+	"""警告：从 Blender 文件中永久删除所选动作"""
 	bl_idname = "delete.action"
-	bl_label = "Delete Action"
+	bl_label = "删除所选动作"
 	#delaction = bpy.props.StringProperty()
 	def execute(self, context):
 		#set_normal_speed()
@@ -831,31 +831,31 @@ def quickfix_index():
 
 
 def register():
-	bpy.types.Scene.actionloader_DualView = bpy.props.BoolProperty(default= False, description = "Two List of the Actions so you can have different filters on each. Doesn't affect or change anything in the scene, just for listing.")
+	bpy.types.Scene.actionloader_DualView = bpy.props.BoolProperty(default= False, description = "显示两个动作列表，两个列表可以分别筛选；只改变显示方式，不修改场景")
 	
 	bpy.types.Object.action_list_index = bpy.props.IntProperty(
 		override={"LIBRARY_OVERRIDABLE"}, 
 		update = update_action_list, 
-		description = "Action Loader's highlighted action on list for this object"
+		description = "此物体在动作加载器列表中高亮显示的动作"
 		)
 	bpy.types.Scene.action_list_index = bpy.props.IntProperty(
 		#update = update_action_list_noObj, 
-		description = "Action Loader's highlighted action on list for this scene when no object selected"
+		description = "没有选中物体时，场景动作列表中高亮显示的动作"
 		)
 	enum_items = (
-		('0','Custom','Sets Frame Range of action by the current Frame Range'),
-		('1','Keyframes',"Sets Frame Range by action's first and last keyframe")
+		('0','自定义','使用当前帧范围作为动作范围'),
+		('1','关键帧','使用动作的首尾关键帧设置范围')
 		)
 	bpy.types.Scene.actionloader_rangemode = bpy.props.EnumProperty(
 		items = enum_items,
 		update = update_rangemode,
-		description = "Set the range for 0: custom or 1: based on keyframes"
+		description = "选择使用自定义范围或动作的首尾关键帧"
 		)
 	enum_prevspeed = (
-		('0','Normal','Set speed to Normal (Time Remapping "frame_map_new" to 100 and adjusts range)'),
-		('1','1/2', 'Set speed to half (Time Remapping "frame_map_new" to 200 and adjusts range)'),
-		('2','1/4', 'Set speed to a quarter (Time Remapping "frame_map_new" to 400 and adjusts range)'),
-		('3','1/8', 'Set speed to an eighth (Time Remapping "frame_map_new" to 800 and adjusts range)')
+		('0','正常','使用正常速度预览，并将时间重映射设为 100'),
+		('1','1/2', '使用一半速度预览，并将时间重映射设为 200'),
+		('2','1/4', '使用四分之一速度预览，并将时间重映射设为 400'),
+		('3','1/8', '使用八分之一速度预览，并将时间重映射设为 800')
 		)
 	bpy.types.Scene.actionloader_speedprev = bpy.props.EnumProperty(
 		items = enum_prevspeed,
@@ -864,23 +864,23 @@ def register():
 		get = get_prevspeed
 		)
 	bpy.types.Scene.actionloader_showicons = bpy.props.BoolProperty(
-		name = "Show icons", 
-		description = "Show icons in Action Loader Addon",
+		name = "显示图标",
+		description = "在动作加载器列表中显示动作图标",
 		default = True
 		)
 	bpy.types.Scene.actionloader_autorange = bpy.props.BoolProperty(
-		name = "Set Auto Range", 
-		description = "Automatically set and load Frame Ranges for each Action and zoom in on Loading actions",
+		name = "自动设置帧范围",
+		description = "选择动作时自动载入该动作的帧范围",
 		default = False
 		)
 	bpy.types.Scene.actionloader_1stFrame = bpy.props.BoolProperty(
-		name = "Jump to first frame of the animation",
-		description = "Automatically set and load Frame Ranges for each Action and zoom in on Loading actions",
+		name = "跳到动作第一帧",
+		description = "选择动作后自动跳到该动作的第一帧",
 		default = False
 		)
 	bpy.types.Scene.actionloader_autoplay = bpy.props.BoolProperty(
-		name="Auto Play",
-		description="Start timeline playback when an Action is selected",
+		name="自动播放",
+		description="选择动作后自动开始播放时间轴",
 		default=False,
 		)
 
